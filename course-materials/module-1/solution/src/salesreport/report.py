@@ -1,10 +1,9 @@
-"""Core sales-report logic.
+""" Core sales-report logic.
 
-Notice this module knows nothing about the CLI, argv, or hardcoded
-paths. It takes a path in, and gives data back. That separation is what
-makes it testable without touching a filesystem full of magic assumptions,
-and reusable from anywhere - a script, a test, a future pipeline step -
-not just from one specific folder on one specific machine.
+This module contains the core logic for reading sales data from a CSV file and calculating total revenue by store. 
+It provides two main functions: `read_sales_rows` for reading the sales data into a list of dictionaries,
+ and `total_revenue_by_store` for calculating the total revenue for each store based on the sales data.
+
 """
 
 import csv
@@ -12,13 +11,16 @@ from pathlib import Path
 
 
 def read_sales_rows(path: Path) -> list[dict[str, str]]:
-    with path.open(newline="") as f:
+    rows = []
+    with open(path, newline="") as f:
         reader = csv.DictReader(f)
-        return list(reader)
+        for row in reader:
+            rows.append(row)
+    return rows
 
 
 def total_revenue_by_store(rows: list[dict[str, str]]) -> dict[str, float]:
-    totals: dict[str, float] = {}
+    totals = {}
     for row in rows:
         store = row["store_id"]
         qty = int(row["quantity"])
