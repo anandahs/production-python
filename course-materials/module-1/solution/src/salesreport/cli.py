@@ -6,10 +6,13 @@
 
 """
 
+from __future__ import annotations
+
 from pathlib import Path
+
 import click
 
-from salesreport.report import read_sales_rows, total_revenue_by_store
+from salesreport.report import read_sales_rows, total_revenue_by_store, validate_rows
 
 
 @click.group()
@@ -18,11 +21,12 @@ def cli() -> None:
 
 
 @click.command()
-@click.option("--input",
-              "input_path",
-              required=True,
-              type=click.Path(exists=True, path_type=Path),
-              help="Path to the sales CSV file containing sales data."
+@click.option(
+    "--input",
+    "input_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to the sales CSV file containing sales data.",
 )
 def generate(input_path: Path) -> None:
     """Generate a sales report from the given input CSV file."""
@@ -33,7 +37,29 @@ def generate(input_path: Path) -> None:
         click.echo(f"  {store}: ${total:.2f}")
 
 
+@click.command()
+@click.option(
+    "--input",
+    "input_path",
+    required=True,
+    type=click.Path(exists=True, path_type=Path),
+    help="Path to the sales CSV file containing sales data.",
+)
+def validate(input_path: Path) -> None:
+    """Validate sales rows and print the reasons rows were skipped."""
+    rows = read_sales_rows(input_path)
+    skipped, reasons = validate_rows(rows)
+
+    click.echo(f"Skipped {skipped} rows")
+    for reason, count in sorted(reasons.items()):
+        click.echo(f"  {reason}: {count}")
+
+    if skipped == 0:
+        click.echo("No invalid rows found.")
+
+
 cli.add_command(generate)
+cli.add_command(validate)
 
 if __name__ == "__main__":
     cli()
