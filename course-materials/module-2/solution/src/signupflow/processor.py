@@ -1,17 +1,8 @@
-"""Same computations as the starter code. Compare this line by line to
-starter/signup_processor.py - the actual logic (how a trial end date
-gets computed, how counts get totaled) is unchanged. What changed is
-what these functions trust: a validated SignupRecord, not a raw dict
-that might contain anything.
-"""
-
 from datetime import date, timedelta
+from signupflow.models import SignupRecord  
 
-from signupflow.models import SignupRecord
-
-
-def compute_trial_end_dates(records: list[SignupRecord]) -> list[dict[str, str]]:
-    results = []
+def compute_trial_end_dates(records: list[SignupRecord]) -> list[dict[str,str]]:
+    results: list[dict[str, str]] = []
     for record in records:
         trial_end = record.signup_date + timedelta(days=record.trial_days)
         results.append(

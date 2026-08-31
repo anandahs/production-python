@@ -5,10 +5,10 @@ build-backend = "hatchling.build"
 [project]
 name = "signupflow"
 version = "0.1.0"
-description = "Signup record validation and reporting - Module 2 lab solution"
+description = "Signup record validation and reporting"
 requires-python = ">=3.11"
 dependencies = [
-    "pydantic==2.13.4",
+    "pydantic==2.9.2",
 ]
 
 [tool.hatch.build.targets.wheel]

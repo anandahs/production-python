@@ -1,5 +1,4 @@
 from pathlib import Path
-
 from signupflow.loader import load_signup_records
 from signupflow.processor import compute_trial_end_dates, count_by_plan
 
