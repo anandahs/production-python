@@ -1,0 +1,16 @@
+[build-system]
+requires = ["hatchling"]
+build-backend  = "hatchling.build"
+
+[project]
+name = "fxrates"
+version = "0.1.0"
+description = "FX rate fetcher with classified retries and a dead-letter path"
+requires-python = ">=3.11"
+dependencies = []
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/fxrates"]
+
+[tool.mypy]
+strict = true
