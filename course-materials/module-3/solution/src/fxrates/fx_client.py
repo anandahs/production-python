@@ -46,6 +46,29 @@ def fetch_rate(pair: str) -> float:
     return _RATES[pair]
 
 
+def fetch_historical_rate(pair: str, date: str) -> float:
+    """Same flaky service as fetch_rate, for a rate on a specific past date.
+
+    Flakiness is tracked per (pair, date) - not per pair - so each date is
+    its own independent sequence of failures, same as a real historical-rates
+    endpoint would behave.
+    """
+    key = f"{pair}@{date}"
+    _call_counts[key] = _call_counts.get(key, 0) + 1
+    attempt = _call_counts[key]
+
+    if pair not in _VALID_PAIRS:
+        raise InvalidCurrencyPairError(f"{pair} is not a recognized currency pair")
+
+    if pair == "USD/EUR" and attempt < 3:
+        raise RateServiceTimeout(f"Timed out fetching {pair} on {date} (attempt {attempt})")
+
+    if pair == "USD/GBP" and attempt < 2:
+        raise RateServiceUnavailable(f"{pair} service temporarily unavailable")
+
+    return _RATES[pair]
+
+
 def reset() -> None:
     """Only for re-running the demo from a clean state."""
     _call_counts.clear()
