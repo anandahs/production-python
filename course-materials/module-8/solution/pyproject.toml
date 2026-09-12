@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "reportsvc"
+version = "0.1.0"
+description = "Quarterly report generator with typed, validated, fail-fast config"
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic-settings==2.14.2",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/reportsvc"]
+
+[tool.mypy]
+strict = true
+plugins = ["pydantic.mypy"]
